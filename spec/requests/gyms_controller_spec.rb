@@ -26,10 +26,11 @@ RSpec.describe 'Gyms', type: :request do
     before { get "/api/v1/gyms/#{gym_id}" }
 
     context 'when the gym exists' do
+      let!(:gym) { create(:gym, name: 'Vitorio GYM') }
+      let(:gym_id) { gym.id }
+
       it 'returns the gym' do
-        expect(JSON(response.body)).not_to be_empty
-        expect(JSON(response.body)['id']).to eq(gym_id)
-        expect(JSON(response.body)['name']).to eq('Vitorio GYM')
+        expect(JSON(response.body)).to include(gym.attributes.as_json)
       end
       it 'returns a status code :ok' do
         expect(response).to have_http_status(:ok)
@@ -49,5 +50,42 @@ RSpec.describe 'Gyms', type: :request do
     end
   end
 
+  describe 'POST /api/v1/gyms' do
+    context 'when gym attributes are valid ' do
+      let(:valid_gym_attributes) do
+        {
+          name: 'Vitório GYM',
+          document_number: '1234567890',
+          document_type: 'cnpj',
+          email: 'vitorio@gym.com'
+        }
+      end
 
+      before { post '/api/v1/gyms', params: { gym: valid_gym_attributes }}
+
+      it 'creates a new gym' do
+        expect(JSON.parse(response.body)).to include(valid_gym_attributes.as_json)
+      end
+
+      it 'returns a status code :created' do
+        expect(response).to have_http_status(:created)
+      end
+    end
+
+    context 'when gym attributes are not valid' do
+      let(:invalid_gym_attributes) { { name: 'foo' } }
+
+      before { post '/api/v1/gyms', params: { gym: invalid_gym_attributes }}
+
+      it 'returns the error message' do
+        %w[document_number document_type email].each do |attr|
+          expect(JSON(response.body)[attr]).to match(["can't be blank"])
+        end
+      end
+
+      it 'returns a status code :unprocessable_entity' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
 end

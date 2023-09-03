@@ -39,6 +39,6 @@ class Api::V1::GymsController < ApplicationController
   end
 
   def gym_params
-    params.require(:gym).permit(:name, :document_number, :email)
+    params.require(:gym).permit(:name, :document_number, :document_type, :email)
   end
 end
