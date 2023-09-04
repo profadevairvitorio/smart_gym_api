@@ -88,4 +88,39 @@ RSpec.describe 'Gyms', type: :request do
       end
     end
   end
+
+  describe 'PUT /api/v1/gyms/:id' do
+    context 'when the gym exists' do
+      let!(:gym) { create(:gym, id: 1, name: 'Vitorio GYM') }
+      let(:gym_id) { gym.id }
+      let(:valid_attributes) { { name: 'Updated Gym' } }
+
+      before do
+        put "/api/v1/gyms/#{gym_id}", params: { gym: valid_attributes }
+      end
+
+      it 'returns a status code :no_content' do
+        expect(response).to have_http_status(:no_content)
+        expect(gym.reload.name).to eq('Updated Gym')
+      end
+
+    end
+
+    context 'when the gym does not exist' do
+      let(:gym_id) { 100 }
+      let(:gym_name) { { name: 'foo' } }
+
+      before do
+        put "/api/v1/gyms/#{gym_id}", params: { gym: gym_name }
+      end
+
+      it 'returns a status code :not_found' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a not found message' do
+        expect(JSON(response.body)['message']).to match('not found')
+      end
+    end
+  end
 end

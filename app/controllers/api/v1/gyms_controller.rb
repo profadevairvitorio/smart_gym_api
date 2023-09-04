@@ -21,7 +21,7 @@ class Api::V1::GymsController < ApplicationController
 
   def update
     if @gym.update(gym_params)
-      render json: @gym
+      head :no_content
     else
       render json: @gym.errors, status: :unprocessable_entity
     end
