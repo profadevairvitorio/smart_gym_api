@@ -51,7 +51,7 @@ RSpec.describe 'Gyms', type: :request do
   end
 
   describe 'POST /api/v1/gyms' do
-    before { post '/api/v1/gyms', params: { gym: gym_attributes }}
+    before { post '/api/v1/gyms', params: { gym: gym_attributes } }
 
     context 'when gym attributes are valid ' do
       let(:gym_attributes) do
@@ -75,7 +75,7 @@ RSpec.describe 'Gyms', type: :request do
     context 'when gym attributes are not valid' do
       let(:gym_attributes) { { name: 'foo' } }
 
-      before { post '/api/v1/gyms', params: { gym: gym_attributes }}
+      before { post '/api/v1/gyms', params: { gym: gym_attributes } }
 
       it 'returns the error message' do
         %w[document_number document_type email].each do |attr|

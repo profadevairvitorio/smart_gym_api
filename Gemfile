@@ -47,6 +47,7 @@ group :development, :test do
   gem 'ffaker', '~> 2.18'
   gem 'database_cleaner', '~> 2.0'
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'rubocop', '1.0.0', require: false
 end
 
 group :development do
