@@ -125,5 +125,28 @@ RSpec.describe 'Gyms', type: :request do
     end
   end
 
+  describe 'DELETE /api/v1/gyms/:id' do
+    before { delete "/api/v1/gyms/#{gym_id}" }
 
+    context 'when the gym exists' do
+      let!(:gym) { create(:gym) }
+      let(:gym_id) { gym.id }
+
+      it 'returns a status code :no_content' do
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context 'when the gym does not exist' do
+      let(:gym_id) { 100 }
+
+      it 'returns a status code :not_found' do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it 'returns a not found message' do
+        expect(JSON(response.body)['message']).to match('not found')
+      end
+    end
+  end
 end
