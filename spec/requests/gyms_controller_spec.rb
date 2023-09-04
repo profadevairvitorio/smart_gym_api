@@ -51,8 +51,10 @@ RSpec.describe 'Gyms', type: :request do
   end
 
   describe 'POST /api/v1/gyms' do
+    before { post '/api/v1/gyms', params: { gym: gym_attributes }}
+
     context 'when gym attributes are valid ' do
-      let(:valid_gym_attributes) do
+      let(:gym_attributes) do
         {
           name: 'Vitório GYM',
           document_number: '1234567890',
@@ -61,10 +63,8 @@ RSpec.describe 'Gyms', type: :request do
         }
       end
 
-      before { post '/api/v1/gyms', params: { gym: valid_gym_attributes }}
-
       it 'creates a new gym' do
-        expect(JSON.parse(response.body)).to include(valid_gym_attributes.as_json)
+        expect(JSON.parse(response.body)).to include(gym_attributes.as_json)
       end
 
       it 'returns a status code :created' do
@@ -73,9 +73,9 @@ RSpec.describe 'Gyms', type: :request do
     end
 
     context 'when gym attributes are not valid' do
-      let(:invalid_gym_attributes) { { name: 'foo' } }
+      let(:gym_attributes) { { name: 'foo' } }
 
-      before { post '/api/v1/gyms', params: { gym: invalid_gym_attributes }}
+      before { post '/api/v1/gyms', params: { gym: gym_attributes }}
 
       it 'returns the error message' do
         %w[document_number document_type email].each do |attr|
@@ -90,14 +90,15 @@ RSpec.describe 'Gyms', type: :request do
   end
 
   describe 'PUT /api/v1/gyms/:id' do
+
+    before do
+      put "/api/v1/gyms/#{gym_id}", params: { gym: gym_name }
+    end
+
     context 'when the gym exists' do
       let!(:gym) { create(:gym, id: 1, name: 'Vitorio GYM') }
       let(:gym_id) { gym.id }
-      let(:valid_attributes) { { name: 'Updated Gym' } }
-
-      before do
-        put "/api/v1/gyms/#{gym_id}", params: { gym: valid_attributes }
-      end
+      let(:gym_name) { { name: 'Updated Gym' } }
 
       it 'returns a status code :no_content' do
         expect(response).to have_http_status(:no_content)
@@ -123,4 +124,6 @@ RSpec.describe 'Gyms', type: :request do
       end
     end
   end
+
+
 end
