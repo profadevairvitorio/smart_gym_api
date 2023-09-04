@@ -6,13 +6,21 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-
-# Offense count: 6
+# Offense count: 2
 # Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
+# Configuration parameters: TreatCommentsAsGroupSeparators, ConsiderPunctuation, Include.
+# Include: **/*.gemfile, **/Gemfile, **/gems.rb
+Bundler/OrderedGems:
   Exclude:
-    - 'bin/bundle'
+    - 'Gemfile'
 
+#Layout/EmptyLineAfterGuardClause:
+#  Exclude:
+#    - 'bin/bundle'
+
+#Layout/EmptyLines:
+#  Exclude:
+#    - 'config/environments/development.rb'
 
 # Offense count: 3
 # Cop supports --auto-correct.
